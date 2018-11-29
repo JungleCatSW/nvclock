@@ -1,0 +1,49 @@
+CC=@CC@
+INSTALL=@INSTALL@
+
+CFLAGS=@GTK_CFLAGS@ -I../backend -I../nvcontrol -I../..
+HAVE_GTK2=@HAVE_GTK2@
+HAVE_NVCONTROL=@HAVE_NVCONTROL@
+libbackend=../backend/libbackend.a
+libnvcontrol=../nvcontrol/libnvcontrol.a
+
+prefix=$(DESTDIR)@prefix@
+exec_prefix=$(DESTDIR)@exec_prefix@
+bindir=$(DESTDIR)@bindir@
+
+ifeq ($(HAVE_GTK2), yes)
+    PROGRAM=nvclock_gtk
+    INSTALL_APP=mkdir -p $(bindir); $(INSTALL) -c $(PROGRAM) $(bindir)/$(PROGRAM)
+    UNINSTALL_APP=rm -f $(bindir)/$(PROGRAM)
+endif
+
+ifeq ($(HAVE_NVCONTROL), yes)
+    DEPS=$(libbackend) $(libnvcontrol)
+    INCLUDES=@X11_CFLAGS@ -I./backend -I./nvcontrol -I.. -I../..
+    LIBS=@GTK_LIBS@ -L../backend -lbackend -L../nvcontrol -lnvcontrol
+    OBJECTS=banner.o gl.o hw.o main.o settings.o
+else
+    DEPS=$(libbackend)
+    INCLUDES=-I./backend -I./nvcontrol -I.. -I../..
+    LIBS=@GTK_LIBS@ -L../backend -lbackend
+    OBJECTS=banner.o hw.o main.o settings.o
+endif
+
+
+.PHONY: clean distclean install
+all: $(PROGRAM)
+
+nvclock_gtk: $(DEPS) $(OBJECTS)
+	$(CC) -o nvclock_gtk $(OBJECTS) $(libbackend) $(LIBS)
+
+clean:
+	rm -f nvclock_gtk *.core *.o *.exe
+
+distclean: clean
+	rm -f Makefile
+
+install:
+	$(INSTALL_APP)
+
+uninstall:
+	$(UNINSTALL_APP)

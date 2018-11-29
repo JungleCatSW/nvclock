@@ -1,0 +1,129 @@
+NVClock Version 0.8 (Beta4)
+ 
+site: http://nvclock.sourceforge.net
+
+projectpage: http://www.sourceforge.net/projects/nvclock
+			
+Introduction
+============
+
+NVClock is a small program for tweaking nVidia videocards on 
+FreeBSD, Linux and Windows. Originally  it was only meant for
+overclocking but these days it can do much more. For instance 
+it contains hardware monitoring support using which you can view
+the temperatures and fanspeeds on cards that support it.
+
+Further it allows tweaking of OpenGL settings using the NV-CONTROL
+extension supported by the nVidia Linux/FreeBSD drivers.
+
+Building, installing and using
+==============================
+
+First you have to do ./autogen.sh to create the configure script and
+other build files.
+
+After running autogen.sh you need to run the configure script to 
+generate Makefiles to build NVClock. By default the script tries to
+locate GTK / QT and if found it enables building of the GTK / QT GUIs.
+
+If you want to disable them add --disable-gtk / --disable-qt when running
+the configure script. Second the QT detection might not work correctly. In
+that case you can use the options listed below:
+  --with-qtdir=DIR        Qt installation directory default=$QTDIR
+  --with-qt-includes=DIR  Directory containing the qt include files
+  --with-qt-libraries=DIR Directory containing the qt libraries
+
+Finally the configure script also enables NV-CONTROL support which allows
+tweaking of Opengl / Display options when using the Nvidia drivers on FreeBSD
+or Linux. If you don't want to enable this you can disable it using:
+  --disable-nvcontrol
+
+The NV-CONTROL support requires X, if for some reason the detection of it doesn't
+work try to use:
+  --x-includes=DIR    X include files are in DIR
+  --x-libraries=DIR   X library files are in DIR
+
+Once NVClock is configured run the commands below to compile and install it:
+make
+make install
+
+Once installed you get upto three binaries: nvclock, nvclock_gtk and nvclock_qt.
+The last two are graphical interfaces and don't have any documentation as the
+interfaces aren't very difficult to use.
+
+The binary nvclock is the commandline version and it has various options you can
+use. A short overview is given below for more information consult the nvclock man
+page.
+
+Usage: ./nvclock [options]
+
+    Overclock options:
+	-b  --backend backend	Backend to use: coolbits/coolbits2d/coolbits3d/lowlevel (NV3X/NV4X only)
+	-m  --memclk speed	Memory speed in MHz
+	-n  --nvclk speed	Core speed in MHz
+	-r  --reset		Restore the original speeds
+	-s  --speeds		Print current speeds in MHz
+	-d  --debug		Enable/Disable debug info
+    Hardware options:
+	-c  --card number	Number of the card to use
+	-D  --Debug		Print detailed debug information
+	-f  --force		Force support for disbled hardware
+	-F  --fanspeed speed    Adjust the fanspeed; speed is a value between 10 and 100, a delta like +10/-10 or 'auto'
+	-i  --info		Show detailed card info
+	-P  --punit mask	Activate extra pixel pipelines. (NV4X only)
+	-Q  --deviceid digit    Adjust the last digit of the pci id.
+	-S  --smartdimmer level Adjust brightness of the backlight; level is a value between 15 and 100 or a delta like +10/-10. (NV4X laptops only for now)
+	-T  --temperature       Show the GPU temperatures.
+	-V  --vunit mask	Activate extra vertex pipelines. (NV4X only)
+    NVControl options:
+	-a  --assign		Set an option to a value: -a fsaa=4 or -a vibrance[crt-0]
+	-q  --query		Get the value for an option: -q fsaa or -q vibrance[crt-0]=63
+	-l  --list		Show all available options
+	-x  --xdisplay		Choose another X display
+    Other options:
+	-h  --help		Show this help info
+	          
+You can use any option you want. You can type -m --m -memclk --memclk= and so on.
+Also, you don't have to enter both memory and core speeds.
+
+If you don't have any experience with overclocking, start with adjusting the speeds
+in 1 MHz increments*. 
+
+*Not every memory speed can be set. In case of Geforce/2/3/4 cards cards with DDR memory running
+at frequencies higher than 300 MHz you might notice that overclocking goes in steps of 6-7 MHz or
+sometimes even 13-14MHz. On GeforceFX/Geforce6 cards the situation is normal again.
+
+As of 0.8b4 NVClock also ships with a program called smartdimmer which can be used on laptops to tune
+the backlight. This program works on various Geforce6/7 laptops from Sony and Geforce8/9 laptops from
+Sony, Samsung, HP, Apple and Zepto.
+
+Usage: ./smartdimmer [options]
+
+Options:
+        -g  --get               Query brightness level.
+        -s  --set <level>       Set brightness level (15-100)
+        -i  --increase          Increase brightness with one level.
+        -d  --decrease          Decrease brightness with one level.
+        -h  --help              Prints this help text.
+
+Acknowledgments
+===============
+
+Thanks go to:
+
+ o Matan Ziv-Av for creating nvcs, the original overclocking tool for NVIDIA cards.
+ o Christian Zander (Phoenix) for cleaning up the code
+ o Jan Prokop for creating a qt version
+ o NVIDIA, for having good Linux drivers
+ o Ashley from EntechTaiwan for helping me a bit.
+ o Lipp Moritz (neldoreth) for a lot of testing of 0.8b4
+ o levon, Dragoran, chr-, etorix, Kano, kelmo, Daenjo, ddl, w00ter, dopez and all others (from #nvidia/#nvclock/#kanotix)
+ o Alexey Nicolaychuk (Unwinder)
+
+Plans for the future
+====================
+
+NVClock >0.8
+ o agp-settings (fastwrites, sidebandaddressing, ....)
+ o XF86Config editing (twinview, tvout, ....)
+ o more

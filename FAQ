@@ -1,0 +1,111 @@
+NVClock 0.8 - FAQ
+=================
+This FAQ offers answers to some common questions about NVClock.
+If your question is not addressed herein, please e-mail the author
+so it can be added.
+
+- Why does NVClock only work as root when I don't use Nvidia's
+  accelerated 3d drivers?
+ 
+o NVClock requires read/write access to /dev/mem and only root 
+  has those capabilities. When the Nvidia drivers are loaded
+  there are nvidia0, nvidia1 and other devices in /dev which
+  provide access to the videocard without needing root permissions.
+  You can let non-root users use NVClock if you set NVClock setuid*
+  or setguid**. However, this setup is not very secure!!!
+  If you really wish to have NVClock available to all users, setguid
+  is the more secure of the two options.
+
+   * If a program has setuid permission, anyone who has permission to
+     run the program is treated as if they are the program's owner.
+     chmod 4755 nvclock
+
+   ** If a program has setguid permission, anyone who has permission
+     to run the program is treated as if they belong to the program's group.
+     chmod 2755 nvclock.
+
+
+- Why does the temperature as reported by NVClock differ from nvidia-settings?
+
+o Starting from the Geforce 6200 (NV43) all Nvidia GPUs ship with an temperature
+  sensor builtin into the GPU. This sensor is very basic and in my opinion not
+  very accurate. Most midend and highend Geforce6 boards use an external 'LM99'
+  sensor connected to the I2C bus of the card. This sensor also reads the internal
+  GPU temperature and it also shows the board temperature (the temperature of the sensor
+  chip itself). Further something similar is the case for Geforce7 and Geforce8 cards. For
+  these most highend models (Geforce 7800/7900/8800) contain an ADT7473 sensor.
+
+  When an external sensor chip is present NVClock reads it out. Nvidia-settings in
+  general only reads out the internal GPU sensor (this is the case when only a single
+  temperature is shown). An exception to this rule are some NV43 based Geforce6 cards
+  which feature both an internal and external chip and in case nvidia-settings reads
+  out the external chip.
+
+
+- Why is overclocking of GeforceFX / Geforce6600GT hardware so complicated?
+
+o Most Geforce FX5600/5700/5800/5900 and 6600GT boards switch different
+  clockspeeds when you start 3D applications. At that moment the drivers
+  not only overclock the card but they also adjust the fanspeed and voltages.
+  The result of this is that overclocking is quite complicated as NVClock can't
+  overclock before the 3D app is started as the driver (partly) undoes the
+  overclocking. Second even if the driver wouldn't undo the clocking it would
+  be very dangerous as the voltages / fanspeeds aren't adjusted by NVClock.
+
+
+- Why does NVClock tell me that my card is not supported?
+ 
+o This is most likely due to NVClock not yet including your
+  card's PCI id. Note that in some cases you can continue using NVClock
+  as in those case Uknown is shown while the code already recognizes the
+  boards (sets the right architecture). If that's not the case you really
+  can't run it.
+  (Any PCI id's that are e-mailed to the author will be included in upcoming releases)
+
+
+- Why does NVClock not support NVIDIA's onboard/integrated graphics chipsets?
+ 
+o NVClock is, quite simply, not designed for use with these
+  graphics subsystem configurations. While it may work for 
+  adjusting the graphics chipset's core speed, there are obviously
+  issues with overclocking the memory as it is system memory
+  being used in this case. As it is the adjustment of memory
+  speed that offers the best performance improvement when over-
+  clocking graphics components the author sees no need to support
+  these configurations. Note if you really want to enable overclocking
+  use the -f switch in case of the commandline version.
+
+ 
+- When I overclock my card the screen moves a few pixels to the left.
+  How can I fix this?
+
+o It is possible that your NVClock has been compiled with the option -O2.
+  Remove that option from the makefiles and it should work properly.
+
+
+- When I overclock my card before I start X, my custom speeds are gone
+  when X is launched. What can I do about this? (likely FIXED)
+
+o The problem is that the NVIDIA kernel module (NVdriver/nvidia) resets
+  the speeds of some cards when it starts. Most of the time module isn't
+  loaded at the startup of Linux. Useally the module is loaded on X startup
+  and resets the speeds of some cards. On GeforceFX/Geforce6 the driver actually
+  overclocks the cards as on system startup the clocks are 'low'. For instance
+  they can be 250MH for both GPU and memory. When the module is loaded it reads
+  the default clocks from the videobios and then sets those. Possibly the only
+  way to overclock at system startup is to make sure that the kernel module is 
+  loaded and initialized before running NVClock.
+
+
+- Why can't I change AGP settings in NVClock? 
+
+o At the moment the only thing NVClock does is displaying some AGP info. It reads
+  all that info from the card itself. (not from /proc!) I tried to change AGP settings
+  from within NVClock, but that wasn't a success. When I changed settings in X, X froze.
+  When I changed settings while I wasn't in X, the system froze. And when I changed 
+  settings when no drivers were loaded (also not NVdriver) it worked, but that didn't
+  help me at all. The drivers reset all AGP settings when the kernel module is loaded.
+  
+  In the future there will be another way for changing them. Likely in /etc/conf,modules
+  or /etc/modules.conf. This will require a reload of the kernel module though.
+  

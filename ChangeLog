@@ -1,0 +1,170 @@
+Revision History:
+=================
+
+v0.8b4 - January, 4, 2009
+-------------------------
+ 
+ o Initial GT200 support
+ o Smartdimmer support for various Geforce8/9 laptops from Sony, Samsung, HP and Apple
+ o Added an smartdimmer program to replace the original smartdimmer 0.1 program by Erik Wahling
+ o Bios dumping using PRAMIN to prevent flickering
+ o Bios parsing fixes for newer Geforce9/GT200 bioses
+ o Fanspeed adjustment on various Geforce8/9/GT200 cards
+ o Use of video bios sensor calibration data on Geforce6-GT200 cards
+ o Improved support for internal GPU diode temperature on G84/G86/G94/G96 cards
+ o Fixed NV-CONTROL crash in nvclock_gtk
+ o Many small bugfixes
+
+v0.8b3 - January, 4, 2008
+-------------------------
+
+ o Geforce8 support
+ o Rewritten lowlevel Geforce6/7 overclocking backend [experimental]
+ o Added bios PLL table parsing for Geforce6/7/8 cards
+ o Fanspeed adjustments for 8800 cards equipped with ADT7473 chips
+ o Support for additional Geforce7 AGP cards
+ o Add support for more NV-CONTROL OpenGL settings in GTK
+ o Geforce6 fake Quadro bugfixes
+ o Geforce6 pipeline modding bugfixes
+ o Tons of bugfixes
+
+v0.8b2 - July, 31, 2006
+------------------------
+
+ o Geforce 7300/7600/7800GS/7900 support
+ o Smartdimmer suppport for 7600Go laptops
+ o Fanspeed adjustment support for 7600/7800GS/7900 cards
+ o Support for ADT7473/W83781D sensors
+ o PCI id modding support (Quadro faking)
+ o Temperature reading fixes for internal sensor
+ o Fanspeed adjustment fixes for NV3x/NV4x boards
+ o Pipeline modding fixes
+ o Bios parsing fixes
+ o Improved (experimental) lowlevel overclocking / clock reading for NV4x/G7x boards
+ o Added temperature (-T) switch to nvclock cli
+ o Adjusted -F / -S switch to support incremental fanspeed/smartdimmmer values
+ o Added PCI-Express info reading
+ o Rewritten core backend
+
+v0.8b - August, 30, 2005
+------------------
+
+ o GeforceFX/6/7 support (experimental overclocking: Coolbits + low-level)
+ o Pipeline modding for NV4x cards
+ o Smartdimmer support for 6200Go based laptops
+ o Hardware monitoring for LM99/MAX6659/F75375S/W83L785R chipsets
+ o Support for internal NV43/NV44/NV47 temperature sensor
+ o Ability to enable disabled temperature sensors used on NV43/NV44/NV47 boards
+ o Fanspeed adjustment for FX5900/6600GT/6800GT boards and F75375S/W83L785R sensors
+ o OpenGL options using NV-CONTROL extension
+ o Rewritten GTK2 interface
+ o Bios parsing (GeforceFX/6/7)
+ o X86-64 support
+ o Windows support for debugging purposes
+
+v0.7.0 - July, 29, 2003
+---------------------
+
+ o GeforceFX/QuadroFX support (no overclocking yet except for the FX5200)
+ o FreeBSD support
+ o default speed option
+ o improved overclocking algorithm
+ o AGP 8x fixes
+ o improved laptop and Nforce support
+ o fix for launching nvclock before starting X
+ o dropped the old GTK 1.x client
+ o rewritten backend
+
+v0.6.2 - February, 1, 2003
+-------------------------
+
+ o fixed a serious bug in the overclocking code from nvclock 0.6.1
+ o fixed a bug that broke multiple card support in 0.6.1
+
+v0.6.1 - January, 6, 2003
+-------------------------
+
+ o GeforceFX/QuadroFX support (untested)
+ o support for driver version 1.0-4XXX
+ o improved QT gui
+ o various other bugfixes
+
+v0.6.0 - October 6, 2002
+---------------------------
+
+ o NV18, NV18-GL, NV28, and NV28 support (untested)
+ o GTK 2.x support
+ o improved commandline version
+ o improved GTK gui
+ o fixed multiple card support
+ o adjusted the speed ranges for various cards
+ o additional card info from card registers (GTK gui's only)
+ o code cleanups 
+
+v0.5.0 - March 15, 2002
+-----------------------
+
+ o new calculation code
+ o more working speeds
+ o lots of cleanups
+ o overclocking by non-root users when using the closed source nVidia drivers
+ o fixed "fake ddr" bug for Geforce2MX/Geforce4MX using sdr memory
+ o 27MHz crysthal frequency support which is needed for Geforce4 based cards
+ o support for Geforce4 Ti/MX and Quadro4 XGL/NVS (as yet untested) 
+ o disabled some cards (nForge, Xbox GPU, Mobile GPU's)
+
+
+v0.4.2 - October 10, 2001
+-------------------------
+
+ o Changed Geforce 3 MX/Ultra name to Titanium 200/500
+ o Geforce3 memory overclocking bug fixed
+
+
+v0.4.1 - July 30, 2001
+----------------------
+
+ o Geforce3 mx/ultra and quadro dcc support
+ o little calculation bugfix
+
+
+v0.4.0 - June 4, 2001
+----------------------
+
+ o Geforce2 pro/ultra and geforce3 support
+ o new pci code
+ o code for identifying the card
+ o support for multiple cards
+ o gtk and qt gui
+
+
+v0.3.x (internal beta's)
+----------------------
+
+
+v0.2.0 - March 31, 2001
+-----------------------
+
+ o better commandline handling, now using getopt_long (thanks Sergey Rotar)
+ o works with all cards, the geforce(DDR, 2 GTS, 2 PRO, 2 ULTRA) bug is fixed
+
+
+v0.1.1 - March 13, 2001
+-----------------------
+
+ o more code cleanups (thanks phoenix)
+ o better commandline handling
+ o root warning
+
+
+v0.1 - March 10, 2001
+---------------------
+
+ o command line overclocking
+ o code cleanups
+
+
+v0.01 - first release (by ????)
+---------------------
+
+ o basic overclocking

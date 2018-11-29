@@ -1,0 +1,157 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.53)
+AC_INIT(src/nvclock.c)
+
+AM_CONFIG_HEADER(config.h)
+
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+AC_HEADER_STDC
+
+
+CFLAGS=
+HAVE_GTK2=no
+HAVE_QT=no
+HAVE_NVCONTROL=no
+
+system=`uname -s`
+case $system in
+    FreeBSD)
+    ;;
+    Linux)
+    ;;
+    CYGWIN_NT-5.*)
+	system=Win32
+    ;;
+    *)
+	echo "NVClock doesn't work on this OS yet"
+	exit
+    ;;
+esac
+
+AC_SUBST(system)
+
+AC_SEARCH_LIBS(getopt_long, [getopt gnugetopt], ,[AC_MSG_ERROR(library 'gnugetopt' is needed)])
+AC_CHECK_HEADER(getopt.h, ,[AC_MSG_ERROR(the file 'getopt.h' which is part of glibc or gnugetopt is needed)])
+
+dnl temp ..
+host=linux
+
+
+AC_ARG_ENABLE(gtk,
+[  --enable-gtk		Build the GTK GUI, default=yes ],
+[
+    if test x$enableval = xno; then
+	enable_gtk=no
+    else
+	enable_gtk=yes
+    fi
+],
+enable_gtk=yes)
+
+AC_ARG_ENABLE(qt,
+[  --enable-qt		Build Qt 2.x/3.x GUI, default=yes. ],
+[
+    if test x$enableval = xno; then
+	enable_qt=no
+    else
+	enable_qt=yes
+    fi
+],
+enable_qt=no)
+
+AC_ARG_ENABLE(nvcontrol,
+[  --enable-nvcontrol	Build with NV-CONTROL support which is needed for OpenGL stuff, default=yes. ],
+[
+    if test x$enableval = xno; then
+	enable_nvcontrol=no
+    else
+	enable_nvcontrol=yes
+    fi
+],
+enable_nvcontrol=yes)
+
+dnl We will only compile one NVClock gtk binary, choose the latest version availible
+if test x"$enable_gtk" = "xyes"; then
+    PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.4.0, have_gtk2=yes, have_gtk2=no)
+    GTK2_CFLAGS=$GTK_CFLAGS
+    GTK2_LIBS=$GTK_LIBS
+
+    if test x"$have_gtk2" = xyes; then
+	GTK_CFLAGS=$GTK2_CFLAGS
+	GTK_LIBS=$GTK2_LIBS
+	HAVE_GTK2=yes
+    else
+	GTK_CFLAGS=""
+	GTK_LIBS=""
+    fi
+fi
+
+if test x"$enable_qt" = "xyes"; then
+    CHECK_QT
+
+    if test x"$QT_LIBS" != x -a x"QT_CXXFLAGS" != x ; then
+	QT_LIBS=$QT_LDADD
+	QT_CFLAGS=$QT_CXXFLAGS
+	AC_SUBST(QT_CFLAGS)    
+	AC_SUBST(QT_LIBS)
+	HAVE_QT=yes
+    fi
+fi
+
+if test x"$enable_nvcontrol" = "xyes"; then
+	PKG_CHECK_MODULES([X11], [x11], , AC_MSG_ERROR("X11 required for nvcontrol support"))
+	PKG_CHECK_MODULES([XEXT], [xext], , AC_MSG_ERROR("Xext required for nvcontrol support"))
+
+	X11_CFLAGS="$X11_CFLAGS $XEXT_CFLAGS"
+	X11_LIBS="$X11_LIBS $XEXT_LIBS"
+	if test x"$X11_LIBS" != x ; then
+		HAVE_NVCONTROL=yes
+	AC_SUBST(X11_CFLAGS)
+	AC_SUBST(X11_LIBS)
+	AC_DEFINE([HAVE_NVCONTROL], [1], [NV-CONTROL support for changing OpenGL settings])
+	fi
+fi
+
+AC_SUBST(HAVE_GTK2)
+AC_SUBST(HAVE_QT)
+AC_SUBST(HAVE_NVCONTROL)
+
+AC_SUBST(CFLAGS)
+AC_SUBST(LIBS)
+
+RANLIB=ranlib
+AC_SUBST(RANLIB)
+
+
+AC_OUTPUT(src/Makefile
+	src/backend/Makefile
+	src/nvcontrol/Makefile
+	src/qt/Makefile
+	src/gtk/Makefile
+	Makefile)
+
+
+echo ""
+echo "NVClock build summary:"
+echo "----------------------"
+echo "- Commandline version enabled"
+if [test "$HAVE_NVCONTROL" = "yes"]; then
+    echo "- NV-CONTROL support enabled"
+else
+    echo "- NV-CONROL support disabled"
+fi
+if [test "$HAVE_GTK2" = "yes"]; then
+    echo "- GTK2 GUI enabled"
+else
+    echo "- GTK2 GUI disabled"
+fi
+if [test "$HAVE_QT" = "yes"]; then
+    echo "- QT GUI enabled"
+else
+    echo "- QT GUI disabled"
+fi
+echo ""    

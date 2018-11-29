@@ -1,0 +1,4 @@
+*.moc
+.deps
+Makefile
+nvclock_qt

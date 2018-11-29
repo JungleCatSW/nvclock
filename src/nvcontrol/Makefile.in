@@ -1,0 +1,29 @@
+CC=@CC@
+AR=ar
+RANLIB=@RANLIB@
+system=@system@
+CFLAGS=@X11_CFLAGS@ -I../backend
+HAVE_X11=@HAVE_NVCONTROL@
+OBJECTS=libnvcontrol.o nvcontrol.o
+
+ifeq ($(HAVE_X11), yes)
+    TARGET=libnvcontrol.a
+endif
+
+.PHONY: clean distclean
+
+all: $(TARGET)
+
+
+libnvcontrol.a: $(OBJECTS)
+	$(AR) cru libnvcontrol.a $(OBJECTS)
+	$(RANLIB) libnvcontrol.a
+
+clean:
+	rm -f *.o *.a
+
+distclean: clean
+	rm -f Makefile
+
+install:
+uninstall:

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=NVCLOCK
+Comment=Overclock and Monitor NVIDIA cards
+Exec=nvclock_gtk
+Icon=nvclock.png
+Terminal=false
+Type=Application
+Categories=System;

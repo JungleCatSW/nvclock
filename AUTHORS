@@ -1,0 +1,22 @@
+Roderick Colenbrander <thunderbird2k@gmx.nospam.net>
+  o author of nvclock
+  o rewritten overclocking/pci code
+  o support for multiple cards
+  o GTK gui
+  o documentation
+
+Jan Prokop <jprokop@ibl.nospam.sk>
+  o Qt gui
+
+Samy Al Bahra <samy@kerneled.nospam.com>
+  o FreeBSD port
+
+Adel Gadllah <adel.gadllah@gmail.com>
+  o GTK Artwork
+  o testing
+
+Christian Zander <phoenix@minion.nospam.de>
+(Christian only worked on nvclock 0.1 - 0.2)
+  o cleanups
+  o autoconf/automake
+  o restructuring

@@ -1,0 +1,63 @@
+INSTALL=@INSTALL@
+
+prefix=$(DESTDIR)@prefix@
+docdir=${prefix}/share/doc/nvclock
+mandir=${prefix}/man
+DOCS= ABOUT AUTHORS ChangeLog FAQ README
+
+all:
+	$(MAKE) -C src all
+
+clean:
+	$(MAKE) -C src clean
+
+distclean:
+	$(MAKE) -C src distclean
+	rm -f *.h config.log config.cache config.status Makefile stamp-h
+
+install: install-docs install-man install-desktop-shortcut
+	$(MAKE) -C src install
+
+install-docs:
+	@documentations='$(DOCS)'; \
+	for doc in $$documentations; do \
+	destdir=$(docdir); \
+	name=`echo $$doc` \
+	dir=$$destdir; \
+	mkdir -p $$dir; \
+	cp $$doc $$dir/$$name; \
+	  echo "installing $$doc as $$dir/$$name"; \
+	done
+
+install-desktop-shortcut:
+	mkdir -p $(prefix)/share/applications
+	mkdir -p $(prefix)/share/icons/hicolor/48x48/apps
+	cp nvclock.desktop $(prefix)/share/applications
+	cp nvclock.png $(prefix)/share/icons/hicolor/48x48/apps
+
+install-man:
+	mkdir -p $(mandir)/man1
+	cp nvclock.1 $(mandir)/man1
+
+uninstall: uninstall-docs uninstall-man uninstall-desktop-shortcut
+	$(MAKE) -C src uninstall
+
+uninstall-docs:
+	@documentations='$(DOCS)'; \
+	for doc in $$documentations; do \
+	destdir=$(docdir); \
+	name=`echo $$doc` \
+	dir=$$destdir; \
+	rm -f $$dir/$$name; \
+	  echo "removing $$dir/$$name" ; \
+	done
+
+uninstall-desktop-shortcut:
+	rm -f $(prefix)/share/applications/nvclock.desktop
+	echo "removing $$prefix/share/applications/nvclock.desktop" ; \
+	rm -f $(prefix)/share/icons/hicolor/48x48/apps/nvclock.png
+	echo "removing $$prefix/share/icons/hicolor/48x48/apps/nvclock.png" ; \
+
+uninstall-man:
+	rm -f $(mandir)/man1/nvclock.1
+	echo "removing $$mandir/man1/nvclock.1" ; \

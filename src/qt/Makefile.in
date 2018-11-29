@@ -1,0 +1,52 @@
+CXX=@CXX@
+INSTALL=@INSTALL@
+MOC=@MOC@
+
+OBJECTS=main.o qt_nvclock.o qt_nvclock.moc.o qt_xfree.o qt_xfree.moc.o
+CXXFLAGS=@QT_CFLAGS@ -I../backend
+HAVE_NVCONTROL=@HAVE_NVCONTROL@
+HAVE_QT=@HAVE_QT@
+libbackend=../backend/libbackend.a
+
+prefix=$(DESTDIR)@prefix@
+exec_prefix=$(DESTDIR)@exec_prefix@
+bindir=$(DESTDIR)@bindir@
+
+ifeq ($(HAVE_QT), yes)
+    PROGRAM=nvclock_qt
+    INSTALL_APP=mkdir -p $(bindir); $(INSTALL) -c $(PROGRAM) $(bindir)/$(PROGRAM)
+    UNINSTALL_APP=rm -f $(bindir)/$(PROGRAM)
+endif
+
+ifeq ($(HAVE_NVCONTROL), yes)
+    DEPS=$(libbackend) $(libnvcontrol)
+    INCLUDES=@X11_CFLAGS@ -I./backend -I./nvcontrol -I.. -I../..
+    LIBS=@QT_LIBS@ -L../backend -lbackend -L../nvcontrol -lnvcontrol
+else
+    DEPS=$(libbackend)
+    INCLUDES=@X11_CFLAGS@ -I./backend -I.. -I../..
+    LIBS=@QT_LIBS@ -L../backend -lbackend
+endif
+
+.PHONY: clean distclean install
+all: $(PROGRAM)
+
+nvclock_qt: $(DEPS) qt_nvclock.moc qt_xfree.moc $(OBJECTS)
+	$(CXX) -o nvclock_qt $(CXXFLAGS) $(OBJECTS) $(LIBS) 
+
+clean:
+	rm -f nvclock_qt *.core *.moc *.o
+
+distclean: clean
+	rm -f Makefile
+
+install:
+	$(INSTALL_APP)
+
+uninstall:
+	$(UNINSTALL_APP)
+
+%.moc: %.h
+	$(MOC) $< -o $@.cpp
+	$(CXX) $(CXXFLAGS) -c $@.cpp
+
